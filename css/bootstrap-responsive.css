@@ -1110,7 +1110,27 @@
 
 /* Custom settings */
 .social-media-btn {
-  margin-top: 1% !important;
+  margin-top: 1.5em !important;
+  margin-right: 15%;
+}
+
+.gray-font {
   color: #777777;
-  margin-right: .75em;
+  margin-left: 20em;
+}
+
+.brand {
+  display: block;
+  font-size: 20px;
+  color: #777777;
+  text-shadow: 0 1px 0 #ffffff;
+  margin-top: 3%;
+  margin-left: 15em !important;
+}
+
+* {
+  /* Sets all corners to not be roundy */
+  -webkit-border-radius: 0 !important;
+     -moz-border-radius: 0 !important;
+          border-radius: 0 !important;
 }

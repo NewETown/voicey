@@ -4475,10 +4475,10 @@ input[type="submit"].btn.btn-mini {
   clear: both;
 }
 
-.navbar .container {
+/*.navbar .container {
   width: auto;
-  margin-left: 40%;
-}
+  margin-left: 30%;
+}*/
 
 .nav-collapse.collapse {
   height: auto;
@@ -4668,11 +4668,11 @@ input[type="submit"].btn.btn-mini {
 }
 
 .navbar .nav {
-  position: relative;
-  left: 0;
   display: block;
-  float: left;
-  margin: 0 10px 0 0;
+  margin: 0;
+  position: relative;
+  margin-right: auto;
+  margin-left: 20em;
 }
 
 .navbar .nav.pull-right {
@@ -6238,25 +6238,4 @@ a.badge:focus {
 
 .affix {
   position: fixed;
-}
-
-
-/* CUSTOM CLASSES */
-.brand {
-  display: block;
-  font-size: 20px;
-  color: #777777;
-  text-shadow: 0 1px 0 #ffffff;
-  margin-top: 7%;
-}
-
-.pull-right-social {
-  margin-right: 50px;
-}
-
-* {
-  /* Sets all corners to not be roundy */
-  -webkit-border-radius: 0 !important;
-     -moz-border-radius: 0 !important;
-          border-radius: 0 !important;
 }
