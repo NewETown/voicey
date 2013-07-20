@@ -1,9 +1,0 @@
-!FORUMLAYOUT
-
-<title></title>
-
-<articleContent></articleContent>
-
-<attachments>
-
-<etc>
