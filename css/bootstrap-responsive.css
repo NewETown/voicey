@@ -1111,21 +1111,25 @@
 /* Custom settings */
 .social-media-btn {
   margin-top: 1.5em !important;
-  margin-right: 15%;
+  margin-right: 10em;
 }
 
 .gray-font {
   color: #777777;
-  margin-left: 20em;
+  margin-left: 17em;
 }
 
 .brand {
   display: block;
-  font-size: 20px;
+  font-size: 30px;
   color: #777777;
   text-shadow: 0 1px 0 #ffffff;
   margin-top: 3%;
-  margin-left: 15em !important;
+  margin-left: 7.8em !important;
+}
+
+.header-image {
+  margin-top: .3em;
 }
 
 * {
