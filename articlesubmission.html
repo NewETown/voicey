@@ -1,0 +1,450 @@
+
+<? php require "php/dbconn.php"; ?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Voice-Y | Make your voice heard.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/social-buttons.css" rel="stylesheet">
+    <link href="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+
+    <script src="js/jquery.js"></script>
+    <script src="https://mindmup.s3.amazonaws.com/lib/jquery.hotkeys.js"></script>
+    <script src="js/bootstrap-wysiwyg.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js"></script>
+
+  </head>
+
+  <body>
+    <div id="fb-root"></div>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '201931593302996', // App ID
+          channelUrl : 'www.voice-y.com/channel.html', // Channel File
+          status     : true, // check login status
+          cookie     : true, // enable cookies to allow the server to access the session
+          xfbml      : true  // parse XFBML
+        });
+
+        // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
+        // for any authentication related change, such as login, logout or session refresh. This means that
+        // whenever someone who was previously logged out tries to log in again, the correct case below 
+        // will be handled. 
+        FB.Event.subscribe('auth.authResponseChange', function(response) {
+          // Here we specify what we do with the response anytime this event occurs. 
+          if (response.status === 'connected') {
+            // The response object is returned with a status field that lets the app know the current
+            // login status of the person. In this case, we're handling the situation where they 
+            // have logged in to the app.
+            
+            //testAPI();
+            userID = response.authResponse.userID;
+            
+
+            $('#logout').on('click', function () { 
+              FB.logout(function (response) {console.log("Logged out");}) 
+            });
+            $('#loginArea').hide();
+            $('#postLogin').show();
+            $('#fbPic').attr('src', 'https://graph.facebook.com/'+userID+'/picture?type=small');
+            $('.social-media-btn').css('margin-top', '.75em');
+            //printInfo(response);
+
+            FB.api('/me', function(response) {
+              firstName = response.first_name;
+              lastName = response.last_name;
+              email = response.email;
+              var url = 'php/user_handler.php?id='+userID+'&firstName='+firstName+'&lastName='+lastName+'&email='+email;
+              // using jQuery to perform AJAX POST.
+              $.post(url, function(response) {
+                  // POST callback
+                  console.log("POST callback arrived: " + response);
+              });
+            });
+
+          } else {
+            // The user isn't auth'd
+
+            $('#fbLogin').on('click', function () { 
+              FB.login( function (response) {
+                console.log("Logged in");}, {scope: 'email,user_likes,publish_actions,user_online_presence,access_token'}) 
+            });
+            $('#postLogin').hide();
+            $('#loginArea').show();
+          }
+        });
+      };
+
+      // Load the SDK asynchronously
+      (function(d){
+       var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement('script'); js.id = id; js.async = true;
+       js.src = "http://connect.facebook.net/en_US/all.js";
+       ref.parentNode.insertBefore(js, ref);
+      }(document));
+
+    </script>
+
+    <div class="container-full ">
+      
+      <header class="headerRow top-header">
+        <div class="header-welcome">
+          <div class="span6">
+            <a class="brand" href="index.html">Voice-Y</a>
+            <p class="gray-font">Make your voice heard.</p>
+          </div>
+          <div class="span7 header-image">
+            <img src="http://placehold.it/630x70">
+          </div>
+          <div id="postLogin" class="social-media-btn pull-right gray-font">
+            <a id="logout" href="#"><img src="http://placehold.it/50x30" id="fbPic"></a>
+          </div>
+          <div id="loginArea" class="social-media-btn pull-right gray-font">
+            Login with 
+            <button id="fbLogin" class="btn btn-facebook"><i class="icon-facebook"></i></button>
+            <button id="twitterLogin" class="btn btn-twitter"><i class="icon-twitter"></i></button>
+          </div>
+        </div>
+      </header>
+
+      <nav class="navbar navbar-inverse">
+        <div class="navbar-inner">
+          <div class="container">
+            <div class="nav-collapse collapse">
+              <ul class="nav">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Business<b class="caret"></b></a>
+                  <ul id="Business" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="#">Economics</a></li>
+                    <li><a href="#">Entrepreneurship</a></li>
+                    <li><a href="#">Fundamentals</a></li>
+                    <li><a href="#">Start-Ups</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Entertainment<b class="caret"></b></a>
+                  <ul id="Entertainment" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="#">Celebrities</a></li>
+                    <li><a href="#">eSports</a></li>
+                    <li><a href="#">Movies</a></li>
+                    <li><a href="#">Music</a></li>
+                    <li><a href="#">Television</a></li>
+                    <li><a href="#">Video Games</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Humor<b class="caret"></b></a>
+                  <ul id="Humor" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="#">NSFW</a></li>
+                    <li><a href="#">SFW</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Life<b class="caret"></b></a>
+                  <ul id="Life" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="#">Culture</a></li>
+                    <li><a href="#">Education</a></li>
+                    <li><a href="#">Politics</a></li>
+                    <li><a href="#">Success</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Men<b class="caret"></b></a>
+                  <ul id="Men" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="#">Fashion</a></li>
+                    <li><a href="#">Fitness and Health</a></li>
+                    <li><a href="#">General</a></li>
+                    <li><a href="#">Romance</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sports<b class="caret"></b></a>
+                  <ul id="Sports" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="#">Basketball</a></li>
+                    <li><a href="#">Baseball</a></li>
+                    <li><a href="#">Football</a></li>
+                    <li><a href="#">Soccer</a></li>
+                    <li><a href="#">Other</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Technology<b class="caret"></b></a>
+                  <ul id="Technology" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="#">Cars</a></li>
+                    <li><a href="#">GreenTech</a></li>
+                    <li><a href="#">FutureTech</a></li>
+                    <li><a href="#">Trending</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Women<b class="caret"></b></a>
+                  <ul id="Women" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="#">Fashion</a></li>
+                    <li><a href="#">Fitness and Health</a></li>
+                    <li><a href="#">General</a></li>
+                    <li><a href="#">Romance</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">World<b class="caret"></b></a>
+                  <ul id="World" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="#">News and Events</a></li>
+                    <li><a href="#">Travel</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main hero unit for a primary marketing message or call to action
+      <div class="hero-unit">
+        <h1>Hello, world!</h1>
+        <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+        <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+      </div>
+      -->
+
+      <div class="container form-actions">
+
+        <!-- Article forums go here -->
+
+        <!-- Some kind of intro text here -->
+        <h1>This is a test heading.</h1>
+        <p>This is some test text</p>
+
+        <hr>
+
+        <!-- Article Title -->
+        <h3>What should we call your article?</h3>
+        <input id="Title" class="span4" type="text" placeholder="Title" maxlength="50">
+        <!-- Content box -->
+        <h3>Let's hear what you have to say.</h3>
+        <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+          <!-- For button toolbar -->
+          <div class="btn-group">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="icon-font"></i><b class="caret"></b></a>
+              <ul class="dropdown-menu">
+              </ul>
+          </div>
+          <div class="btn-group">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+              <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+              <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+              <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+              </ul>
+          </div>
+          <div class="btn-group">
+            <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
+            <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
+            <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="icon-strikethrough"></i></a>
+            <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+          </div>
+          <div class="btn-group">
+            <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="icon-list-ul"></i></a>
+            <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="icon-list-ol"></i></a>
+            <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="icon-indent-left"></i></a>
+            <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="icon-indent-right"></i></a>
+          </div>
+          <div class="btn-group">
+            <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+            <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+            <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+            <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+          </div>
+          <div class="btn-group">
+          <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="icon-link"></i></a>
+            <div class="dropdown-menu input-append">
+              <input class="span2" placeholder="URL" type="text" data-edit="createLink"/>
+              <button class="btn" type="button">Add</button>
+            </div>
+            <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="icon-cut"></i></a>
+
+          </div>
+          
+          <div class="btn-group">
+            <a class="btn" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="icon-picture"></i></a>
+            <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
+          </div>
+          <div class="btn-group">
+            <a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="icon-undo"></i></a>
+            <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="icon-repeat"></i></a>
+          </div>
+        </div> 
+
+        <div id="editor" contenteditable="true">
+          Your thoughts, unfiltered.
+        </div>
+
+        <!-- Tags -->
+        <h3>Now tag it.</h3>
+        <p>Select the major category your article falls under. Next tag it with a sub category and an extra word of your choice (the last tag is optional but highly recommended).</p>
+        <div class="row-fluid">
+          <select id="majorCategory"></select>
+          <select id="minorCategory"></select>
+          <!-- <input class="span4" type="tags" placeholder="#SubCategory"> -->
+          <input id="CustomTag" class="span4" type="text" placeholder="#YourTag" maxlength="25">
+        </div>
+        <hr>
+        <p>Make sure you read everything over, you can't proof-read your writing too much. Check your sources, <strong>make sure you give credit where credit is due</strong>. When you're ready...</p>
+        <button id="submit" type="submit" class="btn btn-primary">Submit your article</button>
+
+        
+      </div> <!-- /container -->
+
+      <hr>
+
+      <footer>
+        <p>&copy; Mental Tangent, ltd. 2013</p>
+      </footer>
+
+    </div> <!-- /container-full -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+    <script src="bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <script>
+      $(function(){
+        function initToolbarBootstrapBindings() {
+          var fonts = ['Arial Black', 'Courier', 'Lucida Grande'],
+                fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+          $.each(fonts, function (idx, fontName) {
+              fontTarget.append($('<li><a data-edit="fontName ' + fontName +'" style="font-family:\''+ fontName +'\'">'+fontName + '</a></li>'));
+          });
+
+          $('a[title]').tooltip({container:'body'});
+
+          $('.dropdown-menu input').click(function() {return false;})
+            .change(function () {$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');})
+            .keydown('esc', function () {this.value='';$(this).change();});
+
+          $('[data-role=magic-overlay]').each(function () { 
+            var overlay = $(this), target = $(overlay.data('target')); 
+            overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+          });
+
+          if ("onwebkitspeechchange"  in document.createElement("input")) {
+            var editorOffset = $('#editor').offset();
+            $('#voiceBtn').css('position','absolute').offset({top: editorOffset.top, left: editorOffset.left+$('#editor').innerWidth()-35});
+          } else {
+            $('#voiceBtn').hide();
+          }
+
+        };
+
+        function showErrorAlert (reason, detail) {
+          var msg='';
+          if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+          else {
+            console.log("error uploading file", reason, detail);
+          }
+          $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
+           '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+        };
+        
+        initToolbarBootstrapBindings();
+
+        $('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
+          window.prettyPrint && prettyPrint();
+      });
+
+      function UpdateMinorCategoryList() {
+        var major = $('#majorCategory').val();
+        major = major.replace('#', '');
+        var elems = $('#'+major+' > li');
+        var minor = $('#minorCategory');
+        minor.empty();
+
+        $.each(elems, function() {
+          //console.log($(this).text());
+          minor.append($('<option />').val('#'+$(this).text()).text('#'+$(this).text()));
+        });
+      };
+
+      // Load major categories:
+      $(function() {
+        var categories = $('a.dropdown-toggle[href*=#]');
+        var major = $('#majorCategory');
+        $.each(categories, function() {
+          //console.log($(this).text());
+          major.append($('<option />').val('#'+$(this).text()).text('#'+$(this).text()));
+        });
+        UpdateMinorCategoryList();
+      });
+
+      $('#majorCategory').change(function () {
+        UpdateMinorCategoryList();
+      });
+
+      $('input#Title').maxlength({
+          threshold: 20
+      });
+
+      $('input#CustomTag').maxlength({
+          threshold: 20
+      });
+
+      $('#submit').click(function() {
+        console.log("Submit clicked");
+        var title = $("#Title").val().trim();
+        var content = $("#editor").text().trim();
+        var primary = $("#majorCategory").val().replace('#','');
+        var secondary = $("#minorCategory").val().replace('#','');
+        var extra = $("#CustomTag").val().replace('#','');
+
+        console.log(primary);
+        console.log(secondary);
+        console.log(extra);
+
+        FB.api('/me', function(response) {
+          var fbid = response.id;
+          var url = 'php/article_submit.php?title='+title+'&content='+content+'&major_category='+primary+'&minor_category='+secondary+'&extra_category='+extra+'&fbid='+fbid;
+          $.post(url, function(response) {
+              // POST callback
+              console.log("POST callback arrived: " + response);
+          });
+        });
+      });
+
+    </script>
+
+  </body>
+
+</html>
