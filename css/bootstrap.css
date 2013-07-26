@@ -236,7 +236,7 @@ body {
   font-size: 14px;
   line-height: 20px;
   color: #333333;
-  background-color: #ffffff;
+  background-color: #FFFDF7; /*ffffff;*/
   padding-bottom: 5px;
 }
 
@@ -1167,7 +1167,7 @@ input[type="color"],
   display: inline-block;
   height: 20px;
   padding: 4px 6px;
-  margin-bottom: 10px;
+  /*margin-bottom: 10px;*/
   font-size: 14px;
   line-height: 20px;
   color: #555555;
@@ -4462,6 +4462,7 @@ input[type="submit"].btn.btn-mini {
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
      -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
           box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+  text-align: center;
 }
 
 .navbar-inner:before,
@@ -4672,7 +4673,7 @@ input[type="submit"].btn.btn-mini {
   margin: 0;
   position: relative;
   margin-right: auto;
-  margin-left: 20em;
+  margin-left: auto;
 }
 
 .navbar .nav.pull-right {
@@ -4681,7 +4682,11 @@ input[type="submit"].btn.btn-mini {
 }
 
 .navbar .nav > li {
-  float: left;
+  float:none;
+  display:inline-block;
+  *display:inline; /* ie7 fix */
+  *zoom:1; /* hasLayout ie7 trigger */
+  vertical-align: top;
 }
 
 .navbar .nav > li > a {
