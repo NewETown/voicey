@@ -1,5 +1,3 @@
-
-<? php require "php/dbconn.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -28,263 +26,43 @@
   </head>
 
   <body>
-    <script src="js/jquery.js"></script>
-    <script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '201931593302996', // App ID
-          channelUrl : 'www.voice-y.com/channel.html', // Channel File
-          status     : true, // check login status
-          cookie     : true, // enable cookies to allow the server to access the session
-          xfbml      : true  // parse XFBML
-        });
-
-        // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
-        // for any authentication related change, such as login, logout or session refresh. This means that
-        // whenever someone who was previously logged out tries to log in again, the correct case below 
-        // will be handled. 
-        FB.Event.subscribe('auth.authResponseChange', function(response) {
-          // Here we specify what we do with the response anytime this event occurs. 
-          if (response.status === 'connected') {
-            // The response object is returned with a status field that lets the app know the current
-            // login status of the person. In this case, we're handling the situation where they 
-            // have logged in to the app.
-            
-            //testAPI();
-            userID = response.authResponse.userID;
-            
-
-            $('#logout').on('click', function () { 
-              FB.logout(function (response) {console.log("Logged out");}) 
-            });
-            $('#loginArea').hide();
-            $('#postLogin').show();
-            $('#fbPic').attr('src', 'https://graph.facebook.com/'+userID+'/picture?type=small');
-            $('.social-media-btn').css('margin-top', '.75em');
-            //printInfo(response);
-
-            FB.api('/me', function(response) {
-              firstName = response.first_name;
-              lastName = response.last_name;
-              email = response.email;
-              var url = 'php/user_handler.php?id='+userID+'&firstName='+firstName+'&lastName='+lastName+'&email='+email;
-              // using jQuery to perform AJAX POST.
-              $.post(url, function(response) {
-                  // POST callback
-                  console.log("POST callback arrived: " + response);
-              });
-            });
-
-          } else {
-            // The user isn't auth'd
-
-            $('#fbLogin').on('click', function () { 
-              FB.login( function (response) {
-                console.log("Logged in");}, {scope: 'email,user_likes,publish_actions,user_online_presence,access_token'}) 
-            });
-            $('#postLogin').hide();
-            $('#loginArea').show();
-          }
-        });
-      };
-
-      // Load the SDK asynchronously
-      (function(d){
-       var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-       if (d.getElementById(id)) {return;}
-       js = d.createElement('script'); js.id = id; js.async = true;
-       js.src = "http://connect.facebook.net/en_US/all.js";
-       ref.parentNode.insertBefore(js, ref);
-      }(document));
-
-      // Here we run a very simple test of the Graph API after login is successful. 
-      // This testAPI() function is only called in those cases. 
-      function testAPI() {
-        console.log('Welcome!  Fetching your information.... ');
-        FB.api('/me', function(response) {
-          console.log('Good to see you, ' + response.name + '.');
-          console.log('User ID: ' + response.id);
-          document.getElementById('fbPic').src = "https://graph.facebook.com/"+response.id+"/picture?type=small";
-        });
-
-        FB.api('/me/permissions', function (response) {
-          console.log("Permissions");
-          console.log(response.data[0]);
-        });
-      };
-    </script>
-    <div class="container-full ">
+    <div class="container-full">
       <div id="fb-root"></div>      
-      <header class="headerRow top-header">
-        <div class="header-welcome row-fluid top-buffer">
-          <div class="span4">
-            <a class="brand" href="index.html">Voice-Y</a>
-            <p class="gray-font">Make your voice heard.</p>
-          </div>
-          <div class="span4 header-image">
-            <img src="http://placehold.it/630x70">
-          </div>
-          <div class="span4">
-            <div id="postLogin" class="social-media-btn pull-right">
-              <a id="logout" href="#"><img src="http://placehold.it/50x30" id="fbPic"></a>
-              <a href="articlesubmission.html">+ Article</a>
-            </div>
-            <div id="loginArea" class="social-media-btn pull-right gray-font">
-              Login with 
-              <button id="fbLogin" class="btn btn-facebook"><i class="icon-facebook"></i></button>
-              <button id="twitterLogin" class="btn btn-twitter"><i class="icon-twitter"></i></button>
-            </div>
-          </div>
-        </div>
+      <header id="head" class="headerRow top-header">
       </header>
 
-      <nav class="navbar navbar-inverse">
-        <div class="navbar-inner">
-          <div class="container">
-            <div class="nav-collapse collapse">
-              <ul class="nav">
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Business<b class="caret"></b></a>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li><a href="#">Economics</a></li>
-                    <li><a href="#">Entrepreneurship</a></li>
-                    <li><a href="#">Fundamentals</a></li>
-                    <li><a href="#">Start-Ups</a></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Entertainment<b class="caret"></b></a>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li><a href="#">Celebrities</a></li>
-                    <li><a href="#">eSports</a></li>
-                    <li><a href="#">Movies</a></li>
-                    <li><a href="#">Music</a></li>
-                    <li><a href="#">Television</a></li>
-                    <li><a href="#">Video Games</a></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Humor<b class="caret"></b></a>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li><a href="#">NSFW</a></li>
-                    <li><a href="#">SFW</a></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Life<b class="caret"></b></a>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li><a href="#">Culture</a></li>
-                    <li><a href="#">Education</a></li>
-                    <li><a href="#">Politics</a></li>
-                    <li><a href="#">Success</a></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Men<b class="caret"></b></a>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li><a href="#">Fashion</a></li>
-                    <li><a href="#">Fitness and Health</a></li>
-                    <li><a href="#">General</a></li>
-                    <li><a href="#">Romance</a></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sports<b class="caret"></b></a>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li><a href="#">Basketball</a></li>
-                    <li><a href="#">Baseball</a></li>
-                    <li><a href="#">Football</a></li>
-                    <li><a href="#">Soccer</a></li>
-                    <li><a href="#">Other</a></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Technology<b class="caret"></b></a>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li><a href="#">Cars</a></li>
-                    <li><a href="#">GreenTech</a></li>
-                    <li><a href="#">FutureTech</a></li>
-                    <li><a href="#">Trending</a></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Women<b class="caret"></b></a>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li><a href="#">Fashion</a></li>
-                    <li><a href="#">Fitness and Health</a></li>
-                    <li><a href="#">General</a></li>
-                    <li><a href="#">Romance</a></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">World<b class="caret"></b></a>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li><a href="#">News and Events</a></li>
-                    <li><a href="#">Travel</a></li>
-                  </ul>
-                </li>
-              </ul>
-              <!--<form class="navbar-form pull-right">
-                
-                <input class="span2" type="text" placeholder="Email">
-                <input class="span2" type="password" placeholder="Password">
-                <button type="submit" class="btn">Sign in</button>
-                
-              </form>-->
-            </div><!--/.nav-collapse -->
-          </div>
-        </div>
+      <nav id="top-nav" class="navbar navbar-inverse">
       </nav>
 
-      <!-- Main hero unit for a primary marketing message or call to action
-      <div class="hero-unit">
-        <h1>Hello, world!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+      <div id="search-wrapper">
+        <div id="search" class="navbar">
+          <div id="nav-home" class="span2" style="margin-left:2em; margin-top:.5em;">
+            <a href="#" onclick="homeClick();">VY ICON</a>
+          </div>
+          <div id="search-bars" class="offset6 span4 input-append" style="margin-top: 5px; margin-bottom: 5px;">
+            <input placeholder="#Find" />
+            <input placeholder="#Your" />
+            <input placeholder="#Interests" />
+          </div>
+          <div id="nav-contribute" class="pull-right" style="margin-right:2em; margin-top:.5em;">
+            <a href="articlesubmission.html">+Contribute</a>
+          </div>
+        </div>
       </div>
-      -->
-
+        
       <div class="container">
 
-        <!-- Example row of columns -->
-        <div class="row-fluid">
-          <div class="span4">
-            <img src="http://placehold.it/500x300">
-          </div>
-          <div class="span4">
-            <img src="http://placehold.it/500x300">
-          </div>
-          <div class="span4">
-            <img src="http://placehold.it/500x300">
-          </div>
-        </div>
-        <div class="row-fluid">
-          <div class="span4">
-            <img src="http://placehold.it/500x300">
-          </div>
-          <div class="span4">
-            <img src="http://placehold.it/500x300">
-          </div>
-          <div class="span4">
-            <img src="http://placehold.it/500x300">
-          </div>
-        </div>
-        <div class="row-fluid">
-          <div class="span4">
-            <img src="http://placehold.it/500x300">
-          </div>
-          <div class="span4">
-            <img src="http://placehold.it/500x300">
-          </div>
-          <div class="span4">
-            <img src="http://placehold.it/500x300">
-          </div>
+        <div id="article_display" class="span12">
         </div>
 
       </div> <!-- /container -->
 
-      <hr>
+      <div id="page_nav">
+        <a href="pages/2.html"></a>
+      </div>
 
+      <hr>
+      <div id="detach"></div>
       <footer>
         <p>&copy; Mental Tangent, ltd. 2013</p>
       </footer>
@@ -293,19 +71,75 @@
 
     <!-- Le javascript
     ================================================== -->
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/bootstrap-transition.js"></script>
     <script src="js/bootstrap-alert.js"></script>
     <script src="js/bootstrap-modal.js"></script>
-    <script src="js/bootstrap-dropdown.js"></script>
     <script src="js/bootstrap-scrollspy.js"></script>
     <script src="js/bootstrap-tab.js"></script>
     <script src="js/bootstrap-tooltip.js"></script>
     <script src="js/bootstrap-popover.js"></script>
-    <script src="js/bootstrap-button.js"></script>
     <script src="js/bootstrap-collapse.js"></script>
     <script src="js/bootstrap-carousel.js"></script>
     <script src="js/bootstrap-typeahead.js"></script>
+    <script src="js/bootstrap-affix.js"></script> 
+    
+    <script src="js/masonry.pkgd.js"></script>
+    <script src="js/imagesloaded.pkgd.js"></script>    
+    <script src="js/infinitescroll.min.js"></script>
+    <script src="js/modernizr-2.5.3.min.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <!-- My scripts -->
+    <script src="js/facebook-init.js"></script>
+    <script src="js/masonry-init.js"></script>
+    
+    <script>
+    $(function(){
+      $('#nav-home').hide();
+      $('#nav-contribute').hide();
+      var navHeight = $("#search").height();
+      console.log("navHeight: " + navHeight);
+      var detachTop = $("#detach").offset().top;
+      console.log("detachTop: " + detachTop);
+      var navTop = $("#search-wrapper").offset().top;
+      console.log("navTop: " + navTop);
 
+      $('#nav-wrapper').height(navHeight);
+      $('#search').affix({
+        offset : {
+          top : function() {
+            return navTop;
+          }
+        }
+      });
+
+    });
+
+    $(window).scroll(function() {
+      changeVisibility();
+    });
+
+    function homeClick() {
+      $('#search').removeClass('affix');
+      changeVisibility();
+    }
+
+    function changeVisibility() {
+      var headSize = $('#head').height();
+      var scrollDistance = $(window).scrollTop();
+      if(headSize < scrollDistance) {
+        $('#nav-home').show();
+        $('#nav-contribute').show();
+        $('#search-bars').addClass('offset4').removeClass('offset6');
+      } else {
+        $('#nav-home').hide();
+        $('#nav-contribute').hide();
+        $('#search-bars').addClass('offset6').removeClass('offset4');
+      }
+    }
+    </script>
+    
   </body>
 </html>

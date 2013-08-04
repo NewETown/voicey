@@ -1215,3 +1215,26 @@ div[data-role="editor-toolbar"] {
   border: 1px solid #e3e3e3;
 }
 
+.article {
+  float: left;
+  border: 1px solid;
+  display: block;
+  /*-webkit-transition: top .4s ease-in-out .4s;
+  -moz-transition: top .4s ease-in-out .4s;
+  -ms-transition: top .4s ease-in-out .4s;
+  -o-transition: top .4s ease-in-out .4s;
+  transition: top .4s ease-in-out .4s;*/
+
+  animation: fadein 2s;
+  -moz-animation: fadein 2s; /* Firefox */
+  -webkit-animation: fadein 2s; /* Safari and Chrome */
+  -o-animation: fadein 2s; /* Opera */
+}
+
+.article.reg {
+  width: 24%;
+}
+
+.article.featured {
+  width: 24%;
+}

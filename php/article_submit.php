@@ -1,16 +1,17 @@
 <?php
 
     require('dbconn.php');
+    require('article_page_creation.php');
 
     $db = new DBConnection();
     $conn = $db->GetConnection();
     $conn->beginTransaction();
 
-    if($conn) {
-        echo "\nConnected to database";
-    } else  {
-        echo "\nNot connected";
-    }
+    // if($conn) {
+    //     echo "\nConnected to database";
+    // } else  {
+    //     echo "\nNot connected";
+    // }
 
     $title = null;
     $content = null;
@@ -26,7 +27,7 @@
         if($title == '') {
             $title = null;
         }
-        echo "\nEchoing title: $title";
+        //echo "\nEchoing title: $title";
     }
 
     if(isset($_GET['content'])) {
@@ -35,17 +36,17 @@
         if($content == '') {
             $content = null;
         }
-        echo "\nEchoing content: $content";
+        //echo "\nEchoing content: $content";
     }
 
     if(isset($_GET['major_category'])) {
         $major = $_GET['major_category'];
-        echo "\nEchoing major: $major";
+        //echo "\nEchoing major: $major";
     }
 
     if(isset($_GET['minor_category'])) {
         $minor = $_GET['minor_category'];
-        echo "\nEchoing minor: $minor";
+        //echo "\nEchoing minor: $minor";
     }
 
     if(isset($_GET['extra_category'])) {
@@ -54,15 +55,15 @@
         if($extra == '') {
             $extra = null;
         }
-        echo "\nEchoing extra: $extra";
+        //echo "\nEchoing extra: $extra";
     }
 
     if(isset($_GET['fbid'])) {
         $fbid = $_GET['fbid'];
-        echo "\nEchoing fbid: $fbid";
+        //echo "\nEchoing fbid: $fbid";
     }
 
-    echo "\nAdding '$title' to database.";
+    //echo "\nAdding '$title' to database.\n";
     $sql = "INSERT INTO articles (content, primary_category, secondary_category, extra_category, article_title, FBID) 
                         VALUES (:content, :major_category, :minor_category, :extra_category, :title, :fbid)";
     $ins = $conn->prepare($sql);
@@ -77,16 +78,19 @@
         echo "\nPDO::errorInfo():\n";
         print_r($conn->errorInfo());
     }
-    $ins->execute();
+
+    $ins->execute() or die(print_r($ins->errorInfo(), true));
     $ins->closeCursor();
     $conn->commit();
     
     $conn = null;
 
-    // Now we need to create a link title that we can use to spit out HTML with:
-    $title = preg_replace('/\s+/', '_', $title);
-    $title = $title.".html";
-    echo "\nHTML link name: $title";
+    $composer = new ArticleCreation();
+    $tags = array($major, $minor, $extra);
+    $url = $composer->GenerateHTML($title, $content, $tags);
 
-    echo "\n***End article_submit***";
+    // Now we need to create a link title that we can use to spit out HTML with:
+    echo "$url";
+
+    //echo "\n***End article_submit.php***";
 ?>
