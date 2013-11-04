@@ -39,7 +39,7 @@
           <div id="nav-home" class="span2" style="margin-left:2em; margin-top:.5em;">
             <a href="#" onclick="homeClick();">VY ICON</a>
           </div>
-          <div id="search-bars" class="offset6 span4 input-append" style="margin-top: 5px; margin-bottom: 5px;">
+          <div id="search-bars" class="offset4 span4 input-append" style="margin-top: 5px; margin-bottom: 5px;">
             <input placeholder="#Find" />
             <input placeholder="#Your" />
             <input placeholder="#Interests" />
@@ -132,11 +132,11 @@
       if(headSize < scrollDistance) {
         $('#nav-home').show();
         $('#nav-contribute').show();
-        $('#search-bars').addClass('offset4').removeClass('offset6');
+        $('#search-bars').addClass('offset2').removeClass('offset4');
       } else {
         $('#nav-home').hide();
         $('#nav-contribute').hide();
-        $('#search-bars').addClass('offset6').removeClass('offset4');
+        $('#search-bars').addClass('offset4').removeClass('offset2');
       }
     }
     </script>
